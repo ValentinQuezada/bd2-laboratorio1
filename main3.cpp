@@ -6,16 +6,16 @@
 using namespace std;
 
 struct Alumno {
-    string nombre;
+    string Nombre;
     string Apellidos;
-    string carrera;
-    string mensualidad;
+    string Carrera;
+    float mensualidad;
 
     Alumno() = default;
-    Alumno(string name, string lastname, string major, string pay){
-        nombre = name;
+    Alumno(string name, string lastname, string major, float pay){
+        Nombre = name;
         Apellidos = lastname;
-        carrera = major;
+        Carrera = major;
         mensualidad = pay;
     }
 };
@@ -33,7 +33,7 @@ struct VariableRecord {
         vector<Alumno> res;
         string cadena;
         int pos2;  int pos; int pos3;
-        string apellidos; string nombre; string mensualidad ; string carrera;
+        string apellidos; string nombre; string carrera; string mensualidad;
         archivoo.open(archivo, ios::in);
         if(archivoo.is_open()) {
             while (!archivoo.eof()) {
@@ -46,7 +46,7 @@ struct VariableRecord {
                 apellidos = cadena.substr(pos + 1, pos2 - pos - 1);
                 carrera = cadena.substr(pos2 + 1, pos3 - pos2 - 1);
                 mensualidad = (cadena.substr(pos3 + 1));
-                Alumno a(nombre, apellidos, carrera, mensualidad);
+                Alumno a(nombre, apellidos, carrera, stof(mensualidad));
                 res.push_back(a);
             }
             archivoo.close();
@@ -60,9 +60,9 @@ struct VariableRecord {
         if(archivoo.is_open()) {
             archivoo.seekp(0, std::ios_base::end);
             archivoo << '\n'
-                     << record.nombre << '|'
+                     << record.Nombre << '|'
                      << record.Apellidos << '|'
-                     << record.carrera << '|'
+                     << record.Carrera << '|'
                      << record.mensualidad;
             archivoo.close();
         }
@@ -73,7 +73,7 @@ struct VariableRecord {
         string cadena;
         int pos2;  int pos; int pos3;
         int i=1;
-        string apellidos; string nombre; string mensualidad ; string carrera;
+        string apellidos; string nombre; string carrera; string mensualidad;
 
         archivo_nuevo.open(archivo, ios::in);
         if(archivo_nuevo.is_open()) {
@@ -94,7 +94,7 @@ struct VariableRecord {
             }
             archivo_nuevo.close();
         }
-        Alumno a(nombre, apellidos, carrera, mensualidad);
+        Alumno a(nombre, apellidos, carrera, stof(mensualidad));
         return a;
     }
 
@@ -107,34 +107,34 @@ int main() {
     cout << "Imprimiendo alumnos existentes (antes de agregar):" << endl;
     vector<Alumno> res1 = a.load();
     for(auto &i : res1){
-        cout << " Nombre : " << i.nombre << endl;
+        cout << " Nombre : " << i.Nombre << endl;
         cout << " Apellidos : " << i.Apellidos << endl;
-        cout << " Carrera:  " << i.carrera << endl;
+        cout << " Carrera:  " << i.Carrera << endl;
         cout << " Mensualidad: " << i.mensualidad << endl;
         cout << endl;
     };
 
     // Agregando 3 alumnos
-    a.add({"Enzo", "Camizan Vidal", "Computer Science", "153.5"});
-    a.add({"Valentin", "Quezada Amour", "Computer Science", "164.5"});
-    a.add({"Alvaro", "Garcia Morales", "Computer Science", "180"});
+    a.add({"Enzo", "Camizan Vidal", "Computer Science", 153.50});
+    a.add({"Valentin", "Quezada Amour", "Computer Science", 164.50});
+    a.add({"Alvaro", "Garcia Morales", "Computer Science", 180.00});
 
 
     cout << "Imprimiendo alumnos existentes (despues de agregar):" << endl;
     vector<Alumno> res2 = a.load();
     for(auto &i : res2){
-        cout << " Nombre : " << i.nombre << endl;
+        cout << " Nombre : " << i.Nombre << endl;
         cout << " Apellidos : " << i.Apellidos << endl;
-        cout << " Carrera:  " << i.carrera << endl;
+        cout << " Carrera:  " << i.Carrera << endl;
         cout << " Mensualidad: " << i.mensualidad << endl;
         cout << endl;
     };
 
-    cout << "Imprimiendo alumno #2:" << endl;
-    Alumno alum = a.readRecord(2);
-    cout << " Nombre : " << alum.nombre << endl;
+    cout << "Imprimiendo alumno #4:" << endl;
+    Alumno alum = a.readRecord(4);
+    cout << " Nombre : " << alum.Nombre << endl;
     cout << " Apellidos : " << alum.Apellidos << endl;
-    cout << " Carrera:  " << alum.carrera << endl;
+    cout << " Carrera:  " << alum.Carrera << endl;
     cout << " Mensualidad: " << alum.mensualidad << endl;
     cout << endl;
 
