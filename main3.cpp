@@ -117,7 +117,7 @@ int main() {
     // Agregando 3 alumnos
     a.add({"Enzo", "Camizan Vidal", "Computer Science", 153.50});
     a.add({"Valentin", "Quezada Amour", "Computer Science", 164.50});
-    a.add({"Alvaro", "Garcia Morales", "Computer Science", 180.00});
+    a.add({"Alvaro", "Guerrero Jimenez", "Computer Science", 180.00});
 
 
     cout << "Imprimiendo alumnos existentes (despues de agregar):" << endl;
