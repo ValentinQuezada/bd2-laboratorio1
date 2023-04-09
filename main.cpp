@@ -53,8 +53,9 @@ private:
 
 public:
     FixedRecord(std::string const& file_name)
-        : file(file_name, std::ios::in | std::ios::out)
     {
+        std::ofstream(file_name, std::ofstream::app | std::fstream::binary);
+        file = std::fstream{file_name, std::ios::in | std::ios::out | std::ios::binary};
     }
 
     auto load() -> std::vector<Alumno>
