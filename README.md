@@ -2,13 +2,13 @@
 
 ## ***Integrantes***
 
-    * Enzo Camizan Vidal
-    * Valentín Quezada Amour
-    * Alvaro Guerrero Jiménez	
+  * ### *Enzo Camizan Vidal*
+  * ### *Valentín Quezada Amour*
+  * ### *Alvaro Guerrero Jiménez*	
 
 ## ***Profesor*** 
-    * Heider Sanchez Enriquez  
+  * ### *Heider Sanchez Enriquez*  
 
 
 ## ***Tema***
-    *  Registros de Longitud Fija y Variable
+  * ###  *Registros de Longitud Fija y Variable*
