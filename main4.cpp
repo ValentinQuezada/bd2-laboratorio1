@@ -33,6 +33,8 @@ struct Matricula
 class VariableRecord
 {
     std::fstream file;
+    std::fstream index_file;
+    size_t last_position{};
 
     using size_specifier = std::string::size_type;
 
@@ -42,6 +44,15 @@ public:
         std::ofstream(file_name, std::ofstream::app | std::fstream::binary);
         file = std::fstream{file_name, std::ios::in | std::ios::out | std::ios::binary};
         file.exceptions(std::fstream::eofbit);
+
+        std::string index_filename = file_name + ".dat";
+        std::ofstream(index_filename, std::ofstream::app | std::fstream::binary);
+        index_file =
+            std::fstream{index_filename, std::ios::in | std::ios::out | std::ios::binary};
+        index_file.exceptions(std::fstream::eofbit);
+
+        file.seekg(0, std::ios_base::end);
+        last_position = file.tellg();
     }
 
     auto load() -> std::vector<Matricula>
@@ -102,31 +113,36 @@ public:
         file.write(reinterpret_cast<char const*>(&mat.ciclo), sizeof(mat.ciclo));
         file.write(reinterpret_cast<char const*>(&mat.mensualidad), sizeof(mat.mensualidad));
         file.write(mat.observaciones.data(), mat.observaciones.size());
+
+        index_file.seekp(0, std::ios_base::end);
+        index_file.write(reinterpret_cast<char const*>(&last_position), sizeof(last_position));
+
+        file.flush();
+        index_file.flush();
+
+        last_position = file.tellp();
     }
 
     auto read_record(int pos) -> Matricula
     {
-        file.seekg(0);
+        index_file.seekg(0, std::ios::end);
+        size_t last_valid_index = (index_file.tellg()) / sizeof(last_position) - 1;
 
-        while (pos > 0)
+        if (last_valid_index < size_t(pos))
         {
-            if (!has_remaining_characters())
-            {
-                throw std::runtime_error("Index out of bounds.");
-            }
-
-            --pos;
-
-            auto [size_codigo, size_observaciones] = read_sizes();
-            file.seekg(
-                sizeof(Matricula::ciclo) + sizeof(Matricula::mensualidad) + size_codigo
-                    + size_observaciones,
-                std::ios_base::cur);
+            throw std::runtime_error("Index out of bounds.");
         }
+
+        index_file.seekg(pos * sizeof(last_position), std::ios::beg);
+
+        size_t offset{};
+        index_file.read(reinterpret_cast<char*>(&offset), sizeof(last_position));
+
+        file.seekg(offset, std::ios::beg);
 
         if (!has_remaining_characters())
         {
-            throw std::runtime_error("Index out of bounds.");
+            throw std::runtime_error("Error in data file.");
         }
 
         return read_matricula();
